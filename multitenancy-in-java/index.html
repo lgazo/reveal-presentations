@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js - The HTML Presentation Framework</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<link rel="stylesheet" href="lib/css/print/pdf.css">
+
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+<div class="slides">
+    <section>
+        <h1>
+            <br>
+        </h1>
+<h1>
+        <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/117306/Seges-_Converted_.png" style="border:none">
+        <br>
+    </h1>
+<h1>Multi-Tenancy</h1>
+<div>in Java applications</div>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>@ladislavGazo</div>
+<div>gazo@seges.sk</div>
+</section>
+<section>
+    <section>
+        <h2>The application</h2>
+<div>
+        <br>
+    </div>
+<div>user</div>
+<div>
+    <br>
+</div>
+<div>|</div>
+<div>
+<br>
+</div>
+<div>bunch of <b>JavaScript</b>
+</div>
+<div>
+<br>
+</div>
+<div>|</div>
+<div>
+<br>
+</div>
+<div>
+<b>service</b>
+</div>
+<div>
+<br>
+</div>
+<div>|</div>
+<div>
+<br>
+</div>
+<div>domain model</div>
+</section>
+<section>
+    <h2>Implication</h2>
+<div>
+    <br>
+</div>
+<div>user1 ... userN</div>
+<div>
+<br>
+</div>
+<div>|</div>
+<div>
+<br>
+</div>
+<div>same bunch of <b>JavaScript</b>
+</div>
+<div>
+<br>
+</div>
+<div>|</div>
+<div>
+<br>
+</div>
+<div>
+<b>service</b>
+</div>
+<div>
+<br>
+</div>
+<div>|</div>
+<div>
+<br>
+</div>
+<div>ONE database</div>
+</section>
+</section>
+<section>
+    <section>
+        <h2>One application to rule them all</h2>
+<div>
+        <br>
+    </div>
+<div>The term multi-tenancy in general is applied to software development to indicate an architecture in which a single running instance of an application simultaneously serves multiple clients (tenants).&nbsp;</div>
+<div>
+    <br>
+</div>
+<div>This is highly common in SaaS solutions.&nbsp;</div>
+<div>
+<br>
+</div>
+<div>Isolating information (data, customizations, etc) pertaining to the various tenants is a particular <b>challenge</b> in these systems.<br>
+</div>
+</section>
+<section>
+    <h2>Split me now!</h2>
+<div>
+    <br>
+</div>
+<div>user1 -&gt; BA, user2 -&gt; BA, user 3 -&gt; KE, user 4 -&gt; ZA</div>
+<div>
+<br>
+</div>
+<div>|</div>
+<div>
+<br>
+</div>
+<div>again the same <b>JavaScript</b>
+</div>
+<div>
+<br>
+</div>
+<div>|</div>
+<div>
+<br>
+</div>
+<div>(almost) the same <b>service</b>
+</div>
+<div>
+<br>
+</div>
+<div>|</div>
+<div>
+<br>
+</div>
+<div>DB (BA), DB (KE), DB (ZA)</div>
+</section>
+</section>
+<section>
+    <h2>
+<img src="http://cdn1.raywenderlich.com/wp-content/uploads/2012/09/Rage-why.png">
+    <br>
+</h2>
+<div>
+    <br>
+</div>
+<div>
+<ul>
+<li>a lot of "tenant" dependent data - high volumes</li>
+<li>performance</li>
+<li>separation -&gt; easier backup and <b>restore</b>
+</li>
+<li>scalability of front-end and service layer</li>
+</ul>
+</div>
+<div>
+<br>
+</div>
+</section>
+<section>
+    <section data-background-size="contain" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/108163/Impaling_Death_Shards_2.PNG">
+        <h2>
+            <br>
+        </h2>
+<h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>
+<br>
+</h2>
+<h2>
+<font color="#ffd966">Hibernate is the easiest</font>
+</h2>
+<div>
+<br>
+</div>
+</section>
+<section>
+<h2>Multi-tenant configuration</h2>
+<div>
+<pre><code>&lt;property name="hibernate.multiTenancy" value="DATABASE" /&gt;</code><pre><code>&lt;property name="hibernate.tenant_identifier_resolver" value="sk.seges.hroddelenie.configuration.MultiTenantIdentifierResolver" /&gt;</code></pre>
+<pre><code>&lt;property name="hibernate.multi_tenant_connection_provider" value="org.hibernate.service.jdbc.connections.spi.
+	DataSourceBasedMultiTenantConnectionProviderImpl" /&gt;</code></pre>
+<pre><code>
+&lt;property name="hibernate.connection.datasource" value="java:comp/env/jdbc/hr" /&gt;
+</code></pre>
+<pre><code>&lt;property name="hibernate.multi_tenant.datasource.identifier_for_any" value="default" /&gt;</code></pre>
+</div>
+<div style="text-align: left;">
+<br>
+</div>
+</section>
+<section>
+    <h2>Switch it ON</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<span style="color: rgb(220, 220, 220); font-family: monospace; font-style: normal; font-variant: normal; text-align: left; white-space: pre-wrap; background-color: rgb(63, 63, 63);">
+<font style="font-size: 42px;">hibernate.multiTenancy</font>
+</span>
+<br>
+</div>
+</section>
+<section>
+    <h2>Configure where to look for the current tenant identifier</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<pre><code>hibernate.tenant_identifier_resolver</code></pre>
+</div>
+</section>
+<section>
+    <h2>Where are my connections?</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<pre><code>hibernate.multi_tenant_connection_provider</code></pre>
+<p>
+<font color="#dcdcdc" style="font-size: 32px;">
+    <br>
+</font>
+</p>
+<p>
+<font color="#dcdcdc" style="font-size: 32px;">
+    <br>
+</font>
+</p>
+<p>
+<br>
+</p>
+<blockquote>Hibernate's DataSourceBasedMultiTenantConnectionProviderImpl utilizes JNDI lookups</blockquote>
+</div>
+</section>
+<section>
+    <h2>Point to JNDI root for datasources</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<pre><code>hibernate.connection.datasource</code></pre>
+</div>
+</section>
+<section>
+    <h2>... and the default</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<pre><code>hibernate.multi_tenant.datasource.identifier_for_any</code></pre>
+<p>
+<font color="#dcdcdc" style="font-size: 24px;">
+    <br>
+</font>
+</p>
+<p>
+<font color="#dcdcdc" style="font-size: 24px;">
+    <br>
+</font>
+</p>
+<p>
+<font color="#dcdcdc" style="font-size: 24px;">
+    <br>
+</font>
+</p>
+<p>
+<font color="#dcdcdc" style="font-size: 24px;">
+    <br>
+</font>
+</p>
+<p>
+<font color="#dcdcdc" style="font-size: 24px;">So in the end =&nbsp;</font>
+<span style="color: rgb(220, 220, 220); font-family: monospace; text-align: left; white-space: pre-wrap;">java:comp/env/jdbc/hr/default</span>
+</p>
+</div>
+</section>
+</section>
+<section>
+    <h2>But there are things that don't work</h2>
+<div>
+    <br>
+</div>
+<div>
+<ul>
+<li>EHCache configuration from previous version is different</li>
+<li>Hibernate's internal schema update does not work</li>
+<ul>
+<li>NPE !!! ........ who would have said that</li>
+</ul>
+</ul>
+</div>
+</section>
+<section>
+    <section>
+        <h2>
+            <br>
+        </h2>
+<h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>
+<br>
+</h2>
+<h2>Migration</h2>
+<p>
+</p>
+</section>
+<section>
+    <h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>
+<br>
+</h2>
+<h2>
+<span style="font-size: 72px; font-weight: bold;">Hibernate exporter</span>
+<br>
+</h2>
+<div>
+<span style="font-size: 72px; font-weight: bold;">is not helpful</span>
+</div>
+</section>
+<section>
+    <h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>
+<br>
+</h2>
+<h2>Do you have Envers?</h2>
+<div>
+<br>
+</div>
+<p>then you need custom exporter</p>
+</section>
+<section>
+    <h2>It is easy to write</h2>
+<p>
+    <br>
+</p>
+<p>but don't forget the AuditConfiguration</p>
+<p>
+<br>
+</p>
+<pre><code>Ejb3Configuration jpaConfiguration = new Ejb3Configuration().configure(
+	unitName, null);
+Configuration hibernateConfiguration = jpaConfiguration
+				.getHibernateConfiguration();
+		
+hibernateConfiguration.buildMappings();
+AuditConfiguration auditConfiguration = AuditConfiguration.getFor(
+	hibernateConfiguration);</code></pre>
+<div style="text-align: left;">
+<br>
+</div>
+<p>and use&nbsp;EnversSchemaGenerator at last</p>
+</section>
+<section>
+    <h2>Get rid of NPE bug</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<pre><code> { "hibernate.multiTenancy",
+   "hibernate.tenant_identifier_resolver",
+   "hibernate.multi_tenant_connection_provider",
+   "hibernate.connection.datasource",
+   "hibernate.multi_tenant.datasource.identifier_for_any" }</code></pre>
+</div>
+</section>
+<section>
+    <h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>
+<br>
+</h2>
+<h2>
+<br>
+</h2>
+<h2>Run the exporter from Maven</h2>
+</section>
+<section>
+    <h2>Combine it with Liquibase</h2>
+<div>
+<img src="http://www.liquibase.org/custom_images/home_tagline.png">
+    <br>
+</div>
+<div>
+    <br>
+</div>
+<div>version 3.0.6 contains feature to populate all tenant databases</div>
+<div>
+<br>
+</div>
+<div>
+<pre><code>MultiTenantSpringLiquibase</code></pre>
+</div>
+</section>
+<section>
+    <h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>Don't forget...</h2>
+<div>
+<br>
+</div>
+<p>it is maintenable but generated SQL needs to be checked</p>
+<p>
+<br>
+</p>
+<p>existing databases must be moved to "point 0"</p>
+</section>
+</section>
+<section>
+    <h2>A bit of logging</h2>
+<div>
+<a href="http://www.slf4j.org/faq.html#logging_performance">http://www.slf4j.org/faq.html#logging_performance</a>
+    <br>
+</div>
+<div>Importance of logging - using MDC to track requests</div>
+<div>
+    <br>
+</div>
+<pre><code>                           MDC.put("tenant", clientOrgz); </code></pre>
+<div>
+<span style="font-size: 24px; color: rgb(220, 220, 220); font-family: monospace; text-align: left; white-space: pre-wrap;">
+    <br>
+</span>
+</div>
+<pre><code>log4j.appender.stdout.layout.ConversionPattern = APP [%d{ISO8601}] - %-5p 
+	[%t|%X{tenant}|%X{requestId}] %F:%M %-30.30c{1} - %m%n</code></pre>
+<div>
+<span style="font-size: 24px; color: rgb(220, 220, 220); font-family: monospace; text-align: left; white-space: pre-wrap;">
+    <br>
+</span>
+</div>
+</section>
+<section>
+    <section>
+        <h2>And the most boring...</h2>
+<div>
+        <br>
+    </div>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<h1>Design</h1>
+<div>
+<br>
+</div>
+<div>your app to be multi-tenant</div>
+</section>
+<section>
+    <h2>Send tenant identification</h2>
+<div>
+    <ul>
+<li>in HTTP Header</li>
+<ul>
+    <li>use Filter to get it out</li>
+</ul>
+<li>in Service parameters</li>
+<li>using ThreadLocal variable</li>
+<li>via tenant-URL-based service calls</li>
+<ul>
+<li>rmi://localhost:12345/&lt;tenant&gt;/&lt;service&gt;</li>
+</ul>
+<li>etc...</li>
+</ul>
+</div>
+</section>
+</section>
+<section>
+    <h2>Thanks for listening</h2>
+<h2>
+<img src="http://altscreen.com/wp-content/uploads/2011/06/Editors-Pick-The-Tenant1.jpg" style="width: 925.5669295506215px; height: 420.602411629518px; max-height: none; max-width: none;">
+    <br>
+</h2>
+<div>
+<b>@ladislavGazo</b>
+    <br>
+</div>
+<div>
+    <span style="font-size: 23.622047424316406px;">
+        <b>gazo@seges.sk</b>
+    </span>
+</div>
+</section>
+</div>
+
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
