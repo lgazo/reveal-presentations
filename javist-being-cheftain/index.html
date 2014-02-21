@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Javist Being Cheftain</title>
+
+		<meta name="description" content="Presentation about the introduction to Chef">
+		<meta name="author" content="Ladislav Gazo">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<link rel="stylesheet" href="lib/css/print/pdf.css">
+
+	<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+        <div class="slides">
+        <section>
+            <h1>
+                <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/117306/Seges-_Converted_.png">
+                <br>
+            </h1>
+            <div>
+                <br>
+            </div>
+            <h1>
+                <span style="font-size: 135.72px;">Javist being Cheftain</span>
+                <br>
+            </h1>
+            <p>
+        <span>
+            <br>
+        </span>
+            </p>
+            <p>
+    <span>
+        <br>
+    </span>
+            </p>
+            <p>
+                <span>@ladislavGazo</span>
+            </p>
+            <p>
+                <span>gazo@seges.sk</span>
+            </p>
+
+
+        </section>
+        <section>
+            <section data-background-size="cover" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/259741/bash.png">
+                <h2 style="color: white">Javist Part</h2>
+                <div>
+                    <br>
+                </div>
+            </section>
+            <section>
+                <h2>Changelog</h2>
+                <div>
+<pre><code> # change host records
+    vim /etc/hosts
+    vim /etc/hostname
+
+    # optionally reboot
+    reboot
+
+    # to refresh repo list
+    sudo apt-get update
+    # to install updates
+    sudo apt-get upgrade
+
+    sudo apt-get install tmux mc</code><code>http://www.andrewault.net/2010/05/17/securing-an-ubuntu-server/
+
+    sudo sysctl -w net.ipv4.conf.all.accept_source_route=0
+    sudo sysctl ­-w net.ipv4.conf.default.accept_source_route=0
+
+    sudo aptitude -y install denyhosts
+    sudo aptitude -y install tiger
+    sudo aptitude -y install psad
+    sudo chkrootkit</code>        </pre>
+                </div>
+            </section>
+            <section>
+                <h2>... but what if</h2>
+                <p>
+                </p>
+                <ul>
+                    <li>there are more servers</li>
+                    <ul>
+                        <li>change log for every one</li>
+                    </ul>
+                    <li>I want to setup development environment</li>
+                    <ul>
+                        <li>manually go through the changelog</li>
+                        <li>and probably do mistakes</li>
+                    </ul>
+                    <li>the changelog has some blank places</li>
+                    <ul>
+                        <li>usually it is not that detailed</li>
+                    </ul>
+                </ul>
+                <div style="text-align: left;">
+<span>
+    <br>
+</span>
+                </div>
+                <div style="text-align: left;">
+<span>
+    <br>
+</span>
+                </div>
+                <div style="text-align: center;">
+<span>
+    <b>Holy crap... now what?</b>
+</span>
+                </div>
+                <p>
+                </p>
+            </section>
+        </section>
+        <section>
+            <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/260223/chef-hat-chef.jpg">
+                <h2>
+                    <br>
+                </h2>
+            </section>
+            <section>
+                <h2>Comparison?</h2>
+                <div>
+                    <br>
+                </div>
+                <div>Only subjective:</div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <b>Chef feels more community friendly</b>
+                </div>
+                <div>
+                    <b>&amp;</b>
+                </div>
+                <div>
+                    <b>I like community projects</b>
+                </div>
+            </section>
+            <section>
+                <h2>Alternatives</h2>
+                <div>
+                    <br>
+                </div>
+                <div>Of course there are many:</div>
+                <div>
+                    <ul>
+                        <li>Puppet</li>
+                        <li>CFEngine</li>
+                        <li>Capistrano</li>
+                        <li>Fabric</li>
+                        <li>glu</li>
+                        <li>...</li>
+                    </ul>
+                    <div style="text-align: left;">
+                        <br>
+                    </div>
+                </div>
+                <div style="text-align: center;">There is a difference between infrastructure management and deployment management.</div>
+            </section>
+        </section>
+        <section>
+            <section>
+                <div>
+                    <br>
+                </div>
+                <div>Chef Solo vs<span>. Chef Server</span>
+                </div>
+                <div>
+        <span>
+            <br>
+        </span>
+                </div>
+                <div>
+                    <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/260245/knife.png" style="width: 248.35958046925663px; height: 248.35958046925663px; max-height: none; max-width: none;">
+    <span>
+        <br>
+    </span>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>Knife</div>
+            </section>
+            <section>
+                <h2>Chef</h2>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <b>Solo</b>
+                </div>
+                <div>
+                    <ul>
+                        <li>for local/one node</li>
+                        <li>no central repository of configuration</li>
+                    </ul>
+                    <div style="text-align: left;">
+                        <br>
+                    </div>
+                </div>
+                <div>
+                    <b>Server</b>
+                </div>
+                <div>
+                    <ul>
+                        <li>installed internally or bought from Opscode</li>
+                        <li>central repository of cookbooks</li>
+                        <li>easy to install on supported OS</li>
+                        <ul>
+                            <li>Ubuntu</li>
+                        </ul>
+                    </ul>&nbsp;</div>
+
+
+            </section>
+        </section>
+        <section>
+            <section>&nbsp;<h2 class="absolute-element" style="position: absolute; width: 392px; height: 96px; z-index: 4; left: 283px; top: 20px;">Components<br>
+                <br>
+                <br>
+            </h2>
+                <div class="absolute-element" style="position: absolute; width: 186px; height: 96px; z-index: 4; left: 511px; top: 150px;">
+                    <img src="http://docs.opscode.com/_images/icon_manager.png">
+                    <span>&nbsp;</span>
+                </div>
+                <h2 class="absolute-element" style="position: absolute; width: 98px; height: 96px; z-index: 4; left: 114px; top: 262px;">
+                    <img src="http://docs.opscode.com/_images/icon_node_physical.png">
+                </h2>
+                <img src="http://docs.opscode.com/_images/icon_node_physical.png" class="absolute-element" style="position: absolute; max-height: none; max-width: none; width: 58px; height: 58px; z-index: 4; left: 117px; top: 389px;">
+                <img src="http://docs.opscode.com/_images/icon_chef_client.png" class="absolute-element" style="position: absolute; max-height: none; max-width: none; width: 58px; height: 58px; z-index: 4; left: 163px; top: 284px;">
+                <img src="http://docs.opscode.com/_images/icon_chef_client.png" class="absolute-element" style="position: absolute; max-height: none; max-width: none; width: 58px; height: 58px; z-index: 4; left: 164px; top: 416px;">
+                <img src="http://docs.opscode.com/_images/icon_knife.png" class="absolute-element" style="position: absolute; max-height: none; max-width: none; width: 58px; height: 58px; z-index: 4; left: 679px; top: 360px;">
+                <img src="http://docs.opscode.com/_images/icon_knife.png" class="absolute-element" style="position: absolute; max-height: none; max-width: none; width: 58px; height: 58px; z-index: 4; left: 678px; top: 489px;">
+                <img src="http://docs.opscode.com/_images/icon_repository.png" class="absolute-element" style="position: absolute; max-height: none; max-width: none; width: 58px; height: 58px; z-index: 4; left: 399px; top: 310px;">
+                <img src="http://www.20papercups.net/wp-content/uploads/2011/03/git-logo.png" style="width: 60px; height: 60px; max-height: none; max-width: none; position: absolute; z-index: 4; left: 538px; top: 450px;" class="absolute-element">
+            </section>
+            <section>
+                <h2>Components II.</h2>
+                <div>
+                    <img src="http://docs.opscode.com/_images/icon_node_attribute.png">&nbsp;attributes<br>
+                </div>
+                <div>
+                    <img src="http://docs.opscode.com/_images/icon_run_lists.png">&nbsp;run-lists<br>
+                </div>
+                <div>
+                    <img src="http://docs.opscode.com/_images/icon_roles.png">&nbsp;roles<br>
+                </div>
+                <div>
+                    <img src="http://docs.opscode.com/_images/icon_data_bags.png">&nbsp;data bags<br>
+                </div>
+                <div>
+                    <img src="http://docs.opscode.com/_images/icon_environments.png">&nbsp;environments<br>
+                </div>
+            </section>
+            <section>
+                <h2>The Essence</h2>
+                <h3>
+                    <br>
+                </h3>
+                <h3>Cookbooks:</h3>
+                <div>Attributes</div>
+                <div>Recipes</div>
+                <div>Templates</div>
+                <div>Files</div>
+                <div>
+                    <br>
+                </div>
+                <div>Metadata + Version + Dependencies</div>
+            </section>
+            <section>
+                <h2>CookBooks</h2>
+                <div>
+                    <ul>
+                        <li>managed by Knife</li>
+                        <li>source code stored in Git repository</li>
+                        <li>uploaded to the Chef Server</li>
+                        <li>downloaded by Chef Client on a particular Node</li>
+                    </ul>
+                </div>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>How to start Cooking?</h2>
+                <div>
+                    <br>
+                </div>
+                <div>You <b>do not</b> need to know Ruby up-front</div>
+                <div>=</div>
+                <div>wheew for Javist ;)</div>
+                <div>
+                    <br>
+                </div>
+                <div>but</div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <a href="http://docs.opscode.com/just_enough_ruby_for_chef.html">http://docs.opscode.com/just_enough_ruby_for_chef.html</a>
+                    <br>
+                </div>
+            </section>
+            <section>
+                <h2>Next</h2>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <a href="http://docs.opscode.com/chef/install_workstation.html">Install Chef Workstation if it does not exist</a>
+                    <br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <span style="font-size: 35.434993743896484px; font-style: normal; font-variant: normal;">Set up Git repo ( BB | GitHub | ... )</span>
+                    <br>
+                </div>
+                <div>git clone git://github.com/opscode/chef-repo.git<br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>Follow the guide precisely</div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <i>Note: I keep separate user for development and separate for deployment</i>
+                </div>
+            </section>
+            <section>
+                <h2>Write first CookBook</h2>
+                <div>
+                    <br>
+                </div>
+                <div>It is simple</div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <pre><code>knife cookbook create hyperic</code></pre>
+                </div>
+                <div>
+                    <pre><code>cd hyperic</code><code>vim recipes/default.rb</code></pre>
+                </div>
+                <div>
+                    you get along with 90% of what is already there&nbsp;for most recipes you are fine with basic programming techniques</div>
+                <div>
+                    <pre><code>kitchen init</code></pre>
+                </div>
+                <div>testing is important</div>
+
+
+
+            </section>
+            <section>
+                <h2>Testing</h2>
+                <div>
+                    <pre><code>gem install test-kitchen --pre</code><code>gem install berkshelf<br></code><code>gem install kitchen-vagrant<br></code></pre>
+                </div>
+                <div>SSH to running Vagrant machine when test-kitchen is executed<br>
+                </div>
+                <div>
+                    <pre><code>/chef-repo/cookbooks/hyperic/.kitchen/kitchen-vagrant/default-ubuntu-1204$ vagrant ssh</code></pre>
+                </div>
+                <div>When everything is ready, "fire in the hole"</div>
+                <div>
+                    <pre><code>vim .kitchen.yml</code><code>kitchen test</code></pre>
+                </div>
+            </section>
+            <section>
+                <h2>Cache</h2>
+                <div>http://fgrehm.viewdocs.io/vagrant-cachier<br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>It saves time!</div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <pre><code> vagrant plugin install vagrant-cachier</code></pre>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>But does not work with current Kitchen version without hacking configuration file</div>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Notable Resources</h2>
+                <div>
+                    <a href="http://docs.opscode.com/resource.html">http://docs.opscode.com/resource.html</a>&nbsp;</div>
+                <div>
+<pre><code>directory "/tmp/folder" do
+    owner "root"
+    group "root"
+    mode 0755
+    action :create
+end</code></pre>
+                </div>
+                <div>
+<pre><code>user "hyperic" do
+    supports :manage_home =&gt; true
+    home "/home/#{hyperic_user}"
+    shell "/bin/bash"
+    action :create
+end
+</code></pre>
+                </div>
+                <div>
+    <pre><code>remote_file "hyperic_bundle" do
+    path hyperic_src
+    owner hyperic_user
+    source node['hyperic']['agent']['bundle_url']
+    mode 00644
+end</code>    </pre>
+                </div>
+                <div>
+                    <br>
+                </div>
+
+
+            </section>
+            <section>
+                <h2>Other</h2>
+                <div>
+<pre><code>template "/etc/init.d/#{service_name}" do
+    action :create_if_missing
+    owner "root"
+    mode 00700
+    source "hyperic-agent.erb"
+    variables(
+    :service_name =&gt; service_name,
+    :agentdir =&gt; hyperic_agentdir,
+    :user =&gt; hyperic_user,
+    :java_home =&gt; java_home
+    )
+end
+</code></pre>
+                </div>
+                <div>
+<pre><code>service service_name do  pattern "agent-#{hyperic_version}"
+    action [ :enable, :start ]
+end</code>    </pre>
+                    <code>
+                    </code>
+                </div>
+                <code>
+                    <div>
+<pre><code>bash "extract_tcc" do  cwd ::File.dirname(tcc_down_path)
+    code &lt;&lt;-EOH
+    chown -R #{node.tcc.user}:#{node.tcc.group} #{node.tcc.location}
+    EOH
+end</code></pre>
+                        <code>
+                        </code>
+                    </div>
+                    <code>
+
+
+
+                    </code>
+                </code>
+            </section>
+            <section>
+                <h2>Notable Hints</h2>
+                <div>
+                    <ul>
+                        <li>
+                            <b>(re)create, not update</b>
+                        </li>
+                        <ul>
+                            <li>rather don’t update file, find a way how to create it at once</li>
+                        </ul>
+                        <li>
+                            <b>more detailed steps then you expected</b>
+                        </li>
+                        <ul>
+                            <li>if you thought there are 10 steps what to execute in such an automated way in your head, there are 60 at least</li>
+                        </ul>
+                        <li>
+                            <b>cookbook wrapper pattern</b>
+                        </li>
+                        <ul>
+                            <li>describe the possibility to override resources in the “cookbook wrapper”</li>
+                        </ul>
+                    </ul>
+                </div>
+            </section>
+        </section>
+        <section>
+            <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/260424/threesquareschef-com_3_.jpg" data-background-size="cover">
+                <h2>
+                    <br>
+                </h2>
+                <div>
+                    <br>
+                </div>
+                <h2>Questions?</h2>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <b>@ladislavGazo</b>
+                </div>
+                <div>
+                    <b>gazo@seges.sk</b>
+                </div>
+            </section>
+            <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/260426/sexy-cook-chef-costume-960-p.jpg" data-background-size="cover">
+                <h2>
+                    <br>
+                </h2>
+                <h2>
+                    <br>
+                </h2>
+                <h2>Thank YOu... for...</h2>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <h1 style="font-style: normal; font-variant: normal;">ATTENTION</h1>
+                </div>
+            </section>
+        </section>
+        </div>
+
+        </div>
+
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
