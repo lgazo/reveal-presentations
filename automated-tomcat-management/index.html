@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>(Automated) Tomcat Management</title>
+
+		<meta name="description" content="How do you face Tomcat management issues in the deployment scenarios? Tomcat Control Center combined with Chef automation can help.">
+		<meta name="author" content="Ladislav Gazo">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+<!-- START -->
+
+<div class="slides">
+    <section class="" data-id="22c72b07ec4685b053dca9f6ebd26456">
+        <h1>
+    <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/117306/Seges-_Converted_.png">
+        <br>
+</h1>
+<div>
+    <br>
+</div>
+<h1>(Automated) Tomcat Management
+</h1>
+<p>
+        <br>
+    </p>
+<p>
+<span>@ladislavGazo</span>
+</p>
+<p>
+<span>gazo@seges.sk</span>
+</p>
+
+
+</section>
+    <section class="stack" data-id="b455057658962c4f8257421a0a644a96">
+        <section class="" data-id="67affa5eaefd39b598d56c33f3f816c4" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/542052/grumman-f-14-tomcat.jpg">
+            <h2>
+                <br>
+            </h2>
+<h2>
+            <br>
+        </h2>
+<h2>
+        <font color="#ffffff">Tomcat</font>
+    </h2>
+</section>
+<section class="" data-id="2a2e23bf92eba5e1e2cccc30300a030b">
+    <h2>Structure</h2>
+<div>
+    <br>
+</div>
+<div>
+<ul>
+<li>
+<b style="text-align: center;">bin</b>
+<span style="text-align: center;"> control scripts</span>
+<br>
+</li>
+<li>
+<span style="text-align: center;">
+    <b>lib</b>&nbsp;common libraries</span>
+</li>
+<li>
+<span style="text-align: center;">
+    <b>webapp</b>&nbsp;instance context</span>
+</li>
+<li>
+<span style="text-align: center;">
+    <b>logs</b>&nbsp;...</span>
+</li>
+</ul>
+</div>
+</section>
+<section class="" data-id="cbb6c2aad091bd3fdc50481d2440103d">
+    <h2>Problem?</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<h3>NO</h3>
+<div>for development</div>
+<div>(or simple cases)</div>
+</section>
+</section>
+<section class="stack" data-id="342be84fb602064ef1869936784a7fda">
+    <section class="" data-id="ab51d92ecbe7d416f12f6eba3a5971b9">
+        <h2>Admin's Perspective</h2>
+<div>
+    <br>
+</div>
+<div>
+    <ul>
+        <li>multiple servers</li>
+        <li>multiple instances on a server</li>
+        <li>clustered environment</li>
+        <li>Tomcat's lack of admin tools</li>
+        <li>not willing to pay for <b>tcServer</b>
+    </li>
+</ul>
+</div>
+<div>
+    <img src="http://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Penguin_Admin.svg/527px-Penguin_Admin.svg.png" style="width: 187.93564806632884px; height: 216.29624190733105px; max-height: none; max-width: none;">
+</div>
+</section>
+        <section class="" data-id="69baf3a210e77834317cbe8ab68ceb83">
+            <h2>
+<span style="font-size: 55.8px;">Template:</span>
+            <br>
+</h2>
+<div>
+<ul>
+<li>common logging</li>
+<li>common libraries</li>
+<li>common resource naming (JNDI)</li>
+</ul>
+<br>
+</div>
+<h2>vs.</h2>
+<div>
+            <br>
+        </div>
+<h3>Instance:</h3>
+<div>
+        <ul>
+<li>custom WAR</li>
+<ul>
+        <li>because of different versions</li>
+    </ul>
+<li>custom logs</li>
+<li>specific resources (e.g. in JNDI)</li>
+<li>various apps deployed on one server</li>
+</ul>
+</div>
+</section>
+<section class="" data-id="2973d7beb3cd4030820d344ecc5c601d">
+<h2>endless killing</h2>
+<div>
+<pre><code> /opt/tomcat/bin/shutdown.sh
+</code></pre>
+</div>
+<div>thought it is killed :(</div>
+<div>
+<pre><code> ps aux | grep catal
+</code></pre>
+</div>get the PID<div>
+<pre><code>kill -9 &lt;da_PID&gt;
+
+cd ../logs
+mv * /mnt/backup/logs
+cd ../bin
+./startup.sh</code></pre>
+<div>
+<span>once it is fine but... even in DEV it is boring<br>
+</span>
+<div>
+    <br>
+</div>
+</div>
+</div>
+</section>
+<section class="" data-id="40633ca0f676cf309ba69f5bddb14c87" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/542087/kill_walls_by_kunylinguz-d34k4jd.jpg">
+    <h2>... and we faced such issues</h2>
+</section>
+</section>
+<section class="stack" data-id="ce83a174c87f34e2907601d91055b5f0">
+    <section class="" data-id="ce0bd37ecd265d0b026ac02ea6f38c8f" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/542107/8_The_Control_room.jpg">
+        <h2>
+<span style="color: rgb(255, 255, 255);">Tomcat Control Center</span>
+        <br>
+</h2>
+<div>
+        <span style="color: rgb(255, 255, 255);">
+            <br>
+        </span>
+    </div>
+<div>
+    <span style="color: rgb(255, 255, 255);">
+        <br>
+    </span>
+</div>
+<div>
+<span style="color: rgb(255, 255, 255);">
+    <br>
+</span>
+</div>
+<div>
+<span style="color: rgb(255, 255, 255);">
+    <br>
+</span>
+</div>
+<div>
+<span style="color: rgb(255, 255, 255);">
+    <br>
+</span>
+</div>
+<div>
+<span style="color: rgb(255, 255, 255);">
+    <br>
+</span>
+</div>
+<div>
+<span style="color: rgb(255, 255, 255);">
+    <br>
+</span>
+</div>
+<div>
+<span style="color: rgb(255, 255, 255);">
+    <br>
+</span>
+</div>
+<div>
+<span style="color: rgb(255, 255, 255);">
+    <br>
+</span>
+</div>
+<div>
+<span style="color: rgb(255, 255, 255);">
+    <br>
+</span>
+</div>
+<div>
+<span style="color: rgb(255, 255, 255);">
+    <br>
+</span>
+</div>
+<div>
+<span style="color: rgb(255, 255, 255);">
+    <br>
+</span>
+</div>
+<div>
+<br>
+</div>
+</section>
+<section class="" data-id="60bf1144b22fcc78416729a7498c28c7">
+    <h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>
+<br>
+</h2>
+<h2>
+<b>
+<a href="https://github.com/seges/tomcat-control-center">https://github.com/seges/tomcat-control-center</a>
+</b>
+</h2>
+</section>
+<section class="" data-id="8ebbfdeac0cd22bc5487777002531d66">
+    <h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>
+<br>
+</h2>
+<h2>What is it?</h2>
+</section>
+<section class="" data-id="527c482fa139a670e5304f7d3838c8ce">
+    <h2>Concept</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<h3>Template</h3>
+<div>and</div>
+<div>
+<br>
+</div>
+<h3>(multiple) instance(s)</h3>
+<div>controlled from</div>
+<div>
+<br>
+</div>
+<h3>Single point</h3>
+</section>
+<section class="" data-id="472b739e84def319245245d7fe3128c3">
+    <h2>[small] set of scripts</h2>
+<div>start</div>
+<div>
+<span style="font-size: 36.630035400390625px; font-style: normal; font-variant: normal;">(start_secured)</span>
+    <br>
+</div>
+<div>
+    <br>
+</div>
+<div>stop_force</div>
+<div>restart_force<br>
+</div>
+<div>backup_logs_restart_force<br>
+</div>
+<div>
+<br>
+</div>
+<div>status</div>
+<div>export_instance_info<br>
+</div>
+<div>
+<br>
+</div>
+<div>control-instances<br>
+</div>
+</section>
+<section class="" data-id="851380d0bbd953dca921e743b2b7aa47">
+    <h2>Central resource control</h2>
+<div>
+    <br>
+</div>
+<div>
+<pre><code style="text-align: center; ">TomcatResources.py </code></pre>
+</div>
+<div>
+<br>
+</div>
+<div>automatically updates server.conf JNDI for each instance</div>
+<div>
+<span>using central CSV files</span>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>setenv</div>
+<div>resource-db</div>
+<div>resource-mail</div>
+<div>resource-env</div>
+<div>resource-rmi</div>
+<div>...</div>
+</section>
+<section class="" data-id="e360996fa3952b89c8e3cb310103ff08">
+    <h2>oh gosh, CSV files?</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>Yeah!</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>... and yeah! again, I can manage it in Excel :p</div>
+</section>
+<section class="" data-id="595865b58c576b16a62f85cdae39c7eb">
+    <h2>Pros</h2>
+<div>
+    <ul>
+        <li>lightweight and simple</li>
+        <li>separate template and instances</li>
+        <li>central management</li>
+    </ul>
+<div style="text-align: left;">
+    <br>
+</div>
+</div>
+<h2>Cons</h2>
+<div>
+<ul>
+<li>so far only on BASH-enabled systems</li>
+<li>no Docker support yet :)</li>
+<li>(not actually a minus) no GUI</li>
+</ul>
+</div>
+</section>
+</section>
+<section class="stack" data-id="ab184c89c57746d32519dd367a1f96d8">
+    <section class="" data-id="4d56c401e8b313f4324274dc1224807b" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/542129/BigRedButton.jpg" data-background-size="cover">
+        <h2>
+            <br>
+        </h2>
+    </section>
+    <section class="" data-id="5a6a8a15ab8a986daa9b8e50a88de7fa" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/542133/chef_logo.png" data-background-size="contain">
+        <h2>
+            <br>
+        </h2>
+    </section>
+    <section class="" data-id="770836e2b41481012c69f7cf4c6844a0">
+        <h2>
+            <br>
+        </h2>
+<h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>
+<a href="https://github.com/seges/chef-cookbook-tcc">https://github.com/seges/chef-cookbook-tcc</a>
+</h2>
+</section>
+<section class="" data-id="bfee261bd5633eba4b7596abb88b8c70">
+    <h2>
+        <br>
+    </h2>
+<h2>Installs TCC</h2>
+<div>
+    <br>
+</div>
+<h2>Prepares Template(s)</h2>
+<div>
+<br>
+</div>
+<h2>prepares Instance(s) Env</h2>
+<div>
+<br>
+</div>
+<h2>(can) monitor with NewRelic</h2>
+</section>
+<section class="" data-id="b8377733553b027e9980d22340662156" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/542162/Los-Angeles-Zoo-wisdom.jpg" data-background-size="cover">
+    <h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>
+<br>
+</h2>
+<h2>
+<br>
+</h2>
+<h2>
+<font color="#ffffff">
+    <br>
+</font>
+</h2>
+<h2>
+<font color="#ffffff">
+    <br>
+</font>
+</h2>
+<h2>
+<font color="#ffffff">... wisdom ...</font>
+</h2>
+</section>
+</section>
+<section class="stack" data-id="e4edb6066e5b6d23e049488a6c6600d6">
+    <section class="" data-id="7fd576e83520414ac24c0682fab1d496" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/542165/boring.jpg" data-background-size="contain">
+        <h2>
+            <br>
+        </h2>
+    </section>
+    <section class="" data-id="1b820dc67a426c83738424552dbe3faf">
+        <h2>Automated TCC</h2>
+<div>
+        <br>
+    </div>
+<div>
+<pre><code>cd ~/chef
+
+git submodule add https://github.com/seges/chef-cookbook-tcc.git site-cookbooks/tcc
+
+git submodule add https://github.com/escapestudios-cookbooks/newrelic.git site-cookbooks/newrelic
+</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="c8043baf9b2a7e2bb70ca111a7acdb2f">
+    <h2>create cookbook or recipe</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<pre><code style="text-align: center; "> knife cookbook create mycookie</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="af0c343e45f6a94a6047eaf426ce30f3">
+    <h2>define default attributes</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<pre><code>default.tcc.user = "lgazo"
+default.tcc.home = "/home/lgazo"
+default.tcc.location = "/home/lgazo/opt/tcc"</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="626560d29e9c23cb0c1e21a608445f9f">
+    <h2>define TCC Tomcat template with dependencies</h2>
+<div>
+<pre><code> default['tcc']['templates'] = {
+  "synapso" =&gt; {
+    "type" =&gt; "tomcat7",
+    "libs" =&gt; [
+      {
+        "repo" =&gt; "maven",
+        "artifact_id" =&gt; "org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1"
+      },
+      {
+        "repo" =&gt; "maven",
+        "artifact_id" =&gt; "com.sun.messaging.mq:imq:4.4"
+      },
+      {
+        "repo" =&gt; "maven",
+        "artifact_id" =&gt; "javax.mail:mail:1.4.4"
+      },
+      {
+        "repo" =&gt; "maven",
+        "artifact_id" =&gt; "org.postgresql:postgresql:9.3-1100-jdbc41"
+      }
+    ]
+  }
+}</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="4ce9487591b535623157a6b2f7932fad">
+    <h2>finally define an instance</h2>
+<div>
+    <br>
+</div>
+<div>
+<pre><code>default['tcc']['instances'] = {
+  "syndev" =&gt; {
+    "template" =&gt; "synapso",
+    "user" =&gt; "lgazo"
+  }
+}
+</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="a3818560b599c2de9f766e7f8e146011">
+    <h2>and tell TCC cookbook to look for templates in our cookbook</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<pre><code>default['tcc']['template_cookbooks'] = "mycookie"</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="115009a27507e19cd40f63d82ea2ccb6">
+<h2>Prepare database if needed</h2>
+<div>
+<pre><code>
+include_recipe "database::postgresql"
+
+postgresql_connection_info = {
+  :host     =&gt; 'localhost',
+  :port     =&gt; node['postgresql']['config']['port'],
+  :username =&gt; 'postgres',
+  :password =&gt; node['postgresql']['password']['postgres']
+}
+
+postgresql_database_user "synapso" do
+  connection postgresql_connection_info
+  password node.postgresql.password.synapso
+  action :create
+end
+
+postgresql_database "synapso" do
+  connection postgresql_connection_info
+  owner "synapso"
+  action :create
+end
+
+postgresql_database "synapso user can create DB" do
+  connection      postgresql_connection_info
+  sql "alter role #{node.synapso.user} with createdb"
+  action :query
+end    
+</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="77ccc0ed055d4717c385b5a11b7f51e5">
+    <h2>Include TCC</h2>
+<div>
+    <br>
+</div>
+<div>
+<pre><code>include_recipe "tcc::default"
+include_recipe "tcc::templates"
+include_recipe "tcc::instances"<font color="#333333" face="Lato, sans-serif"><span style="font-size: 36.630035400390625px; white-space: normal;">
+</span></font>
+</code></pre>
+</div>
+in a server you can monitor it directly<br>
+<div>
+<pre><code>include_recipe "tcc::newrelic"</code></pre>
+</div>
+<div>
+<br>
+</div>
+</section>
+<section class="" data-id="7d1c010e56c1047cf6214e1481737cde">
+    <h2>And now the configuration of instances</h2>
+<div>
+<div>into <i>templates/default/tcc/templates/synapso/conf</i>
+</div>
+<div>
+    <br>
+</div>
+<div>default environment is named “_default”</div>
+<div>
+<br>
+</div>
+<div>
+<ul>
+    <font style="font-size: 32px;">
+        <li>
+            <span style="text-align: center;">context.xml (in current version it is not Chef environment specific)</span>
+        </li>
+<li>
+        <span style="text-align: center;">jmx.properties (in current version it is not Chef environment specific)</span>
+    </li>
+<li>
+    <span style="text-align: center;">resources-</span>
+    </li>
+<ul>
+<li>
+<span style="text-align: center;">c</span>
+    <span style="text-align: center;">onnector.csv</span>
+</li>
+<li>
+    <span style="text-align: center;">db.csv</span>
+</li>
+<li>
+<span style="text-align: center;">env.csv</span>
+</li>
+<li>
+<span style="text-align: center;">mail.csv</span>
+</li>
+<li>
+<span style="text-align: center;">rmi.csv</span>
+</li>
+<li>
+<span style="text-align: center;">setenv.csv</span>
+</li>
+</ul>
+</font>
+</ul>
+</div>
+</div>
+<div>
+<br>
+</div>
+</section>
+<section class="" data-id="5781c3fa0d046178116c714c9a1ae30e">
+    <h2>TCC monitoring</h2>
+<div>
+    <br>
+    </div>
+<div>
+<h3>JMX</h3>
+<div>
+<span>port and access configured in:</span>
+    <br>
+    <ul>
+<li>
+    <span style="text-align: center;">jmx.properties and</span>
+</li>
+<li>
+<span style="text-align: center;">setenv.csv</span>
+</li>
+</ul>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<h3>
+<span>NewRelic</span>
+</h3>
+</div>
+<div>
+<pre><code>include recipe tcc::newrelic </code></pre>
+</div>
+</div>
+<div>
+<br>
+</div>
+</section>
+</section>
+<section class="stack" data-id="f19115e69400420b43bd0a9bc24773e5">
+    <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/260424/threesquareschef-com_3_.jpg" data-background-size="cover" data-id="615141d2d1bd14d9683620aba2ad291a" class="">
+        <h2>
+            <br>
+        </h2>
+<div>
+        <br>
+    </div>
+<h2>Questions?</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<b>@ladislavGazo</b>
+</div>
+<div>
+<b>gazo@seges.sk</b>
+</div>
+</section>
+<section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/260426/sexy-cook-chef-costume-960-p.jpg" data-background-size="cover" class="" data-id="41f6918781adf7ee59c85133c3557ddc">
+    <h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>Thank YOu... for...</h2>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<h1 style="font-style: normal; font-variant: normal;">ATTENTION</h1>
+</div>
+</section>
+</section>
+</div>
+
+
+
+<!-- END -->
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
