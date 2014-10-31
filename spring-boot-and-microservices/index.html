@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Spring Boot and Microservices</title>
+
+		<meta name="description" content="How to start building microservices with Spring Boot">
+		<meta name="author" content="Ladislav Gazo">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+<!-- START -->
+
+<div class="slides">
+    <section class="" data-id="22c72b07ec4685b053dca9f6ebd26456">
+        <h1>
+    <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/117306/Seges-_Converted_.png">
+        <br>
+</h1>
+<div>
+    <br>
+</div>
+<h1>Spring BOOT &amp; microservices</h1>
+<p>
+        <br>
+    </p>
+<p>
+<span>@ladislavGazo</span>
+</p>
+<p>
+<span>gazo@seges.sk</span>
+</p>
+
+
+</section>
+    <section class="stack" data-id="2e90089d9e3921652e039852b5cf00bd">
+        <section class="" data-id="cf9aedeb122afe612f58e2760b03b275" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/776119/The-Problem.png">
+            <h2>
+                <br>
+            </h2>
+        </section>
+        <section class="" data-id="be992212f36b159038086c432008421c">
+            <div>
+                <span style="text-align: left;">
+                    <br>
+                </span>
+            </div>
+<div>
+            <span style="text-align: left;">
+                <br>
+            </span>
+        </div>
+<ul>
+        </ul>
+<span style="text-align: left;">huge application servers</span>
+        <div>
+<div style="text-align: left;">
+        <span>
+            <br>
+        </span>
+    </div>
+<div>
+    <span style="text-align: left;">monolithic architecture</span>
+</div>
+<div>
+<div style="text-align: left;">
+<br>
+</div>
+<ul>
+</ul>
+<span style="text-align: left;">long restarts</span>
+</div>
+<div>
+<div style="text-align: left;">
+<br>
+</div>
+<ul>
+</ul>
+<span style="text-align: left;">no save-reload cycle</span>
+</div>
+<div>
+<div style="text-align: left;">
+<br>
+</div>
+<ul>
+</ul>
+<span style="text-align: left;">wired to a set of dependencies</span>
+<br>
+</div>
+</div>
+</section>
+<section class="" data-id="84d1aa3cc459fa04c30a95ed926caedf">
+    <h2>
+<img src="http://martinfowler.com/articles/microservices/images/conways-law.png" style="width: 771.817109008103px; height: 640.271509208755px; max-height: none; max-width: none;">
+    <br>
+</h2>
+</section>
+</section>
+<section class="stack" data-id="0a431942acf69dfa11e4a37aef7ae408">
+    <section class="" data-id="1b760b807400d6f61fa82d0bc5dfb734" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/776145/keep-calm-and-solve-the-problem.png" data-background-size="contain">
+    </section>
+    <section class="" data-id="7d76e1188e21242d25fb2a22e461b6f0">
+        <h2>Microservices</h2>
+<div>
+        <br>
+    </div>
+<img src="http://martinfowler.com/articles/microservices/images/PreferFunctionalStaffOrganization.png">
+</section>
+<section class="" data-id="db90144d379ad060bd01c70f4c88954c">
+    <h2>PROS</h2>
+<div>
+    <br>
+</div>
+<div>
+<div>
+<b>Each microservice is relatively small</b>
+</div>
+<div>
+<br>
+</div>
+<div>
+<b>Easier for a developer to understand</b>
+</div>
+<div>
+<ul>
+<li>
+<span style="text-align: center;">The IDE is faster making developers more productive</span>
+<br>
+</li>
+<li>
+<span style="text-align: center;">The web container starts faster</span>
+</li>
+</ul>
+</div>
+<div>
+<br>
+</div>
+<div>
+<b>Easier to scale development.&nbsp;</b>
+</div>
+<div>
+<ul>
+    <li>
+        <span style="text-align: center;">Each team can develop, deploy and scale their service independently of all of the other teams.</span>
+    </li>
+</ul>
+</div>
+</div>
+</section>
+<section class="" data-id="053dacd2c7b6a7d9f6fdb064073c5ca3">
+    <h2>PROS 2</h2>
+<div>
+    <br>
+</div>
+<div>
+<div style="font-size: 35.6440505981445px; font-style: normal; font-variant: normal;">
+<b>Improved fault isolation</b>
+</div>
+<div style="font-size: 35.6440505981445px; font-style: normal; font-variant: normal;">
+<ul>
+    <li>
+<span style="font-size: 35.6440505981445px; font-style: normal; font-variant: normal; text-align: center;">&nbsp;In comparison, one misbehaving component of a monolithic architecture can bring down the entire system.</span>
+    <br>
+</li>
+</ul>
+</div>
+<div style="font-size: 35.6440505981445px; font-style: normal; font-variant: normal;">
+<br>
+</div>
+<div style="font-size: 35.6440505981445px; font-style: normal; font-variant: normal;">
+<b>Each service can be developed and deployed independently</b>
+</div>
+<div style="font-size: 35.6440505981445px; font-style: normal; font-variant: normal;">
+<br>
+</div>
+<div style="font-size: 35.6440505981445px; font-style: normal; font-variant: normal;">
+<b>Eliminates any long-term commitment to a technology stack</b>
+</div>
+</div>
+</section>
+<section class="" data-id="ed5caf6baed0e95ca7d1f26255d04d4b">
+    <h2>BUT...</h2>
+<div>(there is always at least one...)</div>
+<div>
+    <br>
+    </div>
+<div>
+<b>Developers must deal with the additional complexity of creating a distributed system</b>
+    <br>
+</div>
+<div>
+    <ul>
+<li>testing</li>
+<li>transactions</li>
+<li>use-cases span multiple microservices</li>
+</ul>
+</div>
+<div>
+<b>
+<br>
+</b>
+</div>
+<div>
+<b>
+<br>
+</b>
+</div>
+<div>
+<b>Deployment complexity In production<br>
+</b>
+</div>
+<div>
+<b>
+<br>
+</b>
+</div>
+<div>
+<b>Increased memory consumption<br>
+</b>
+</div>
+</section>
+<section class="" data-id="f97308c4b68133ae9a1593e0567300e4">
+    <h2>... TACKLE WITH</h2>
+<div>
+    <br>
+</div>
+<div>when to split to multiple microservices</div>
+<div>
+<br>
+</div>
+<div>what should be inside one microservice</div>
+<div>
+<br>
+</div>
+<div>single responsibility principle</div>
+<div>
+<br>
+</div>
+<div>...</div>
+<div>
+<br>
+</div>
+<div>it is <b>the art</b>
+</div>
+<div>
+<br>
+</div>
+</section>
+</section>
+<section class="stack" data-id="43413c9cb6c06d52738d7479adddde2c">
+    <section class="" data-id="5984c52838d2625fcbea7e86b603ba7f">
+        <h2>Spring BOOT</h2>
+<div>
+        <br>
+        </div>
+<div>
+<a href="http://projects.spring.io/spring-boot/">http://projects.spring.io/spring-boot/</a>
+        <br>
+</div>
+<div>
+        <br>
+    </div>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<b>opinionated</b> way how to do modern applications</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+</section>
+<section class="" data-id="c879b1c386b4b7688aa59465e3a450ed">
+    <h2>Very easy to start</h2>
+<div>
+    <pre id="code-block-1" style="padding: 9.5px; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; margin: 0px 0px 10px; word-break: break-all; border: 1px solid rgba(0, 0, 0, 0.14902); overflow-x: auto; font-style: normal; font-variant: normal; background-color: rgb(245, 245, 245);">
+    <code style="padding: 0px; color: inherit; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; white-space: pre; word-break: normal; background-color: transparent;">
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>1.1.8.RELEASE</version>
+</parent>
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+</dependencies>
+            </code>
+</pre>
+</div>
+<div>
+    <br>
+    </div>
+<div>ta-daaaa .... web app built :)</div>
+</section>
+<section class="" data-id="0e8867e98125373c37f2dad5b6ec4ddd">
+    <h2>APP CODE</h2>
+<div>
+    <pre id="code-block-0" style="padding: 9.5px; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; margin: 0px 0px 10px; word-break: break-all; border: 1px solid rgba(0, 0, 0, 0.14902); overflow-x: auto; font-style: normal; font-variant: normal; background-color: rgb(245, 245, 245);">
+        <code class="language-java" data-lang="java" style="padding: 0px; color: inherit; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; white-space: pre; word-break: normal; background-color: transparent;">
+package hello;
+
+import org.springframework.boot.*;
+import org.springframework.boot.autoconfigure.*;
+import org.springframework.stereotype.*;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@EnableAutoConfiguration
+public class SampleController {
+
+    @RequestMapping("/")
+    @ResponseBody
+    String home() {
+        return "Hello World!";
+    }
+
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(SampleController.class, args);
+    }
+}
+        </code>
+    </pre>
+</div>
+<br>
+<div>... the beauty of autoconfiguration</div>
+</section>
+</section>
+<section class="stack" data-id="0ec240aca8833d07277da98907e33bdf">
+    <section class="" data-id="e31e00f2a3237cd6607b2931ec1cd25b" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/776212/reload12_header.jpg">
+        <h2>
+            <br>
+        </h2>
+    </section>
+    <section class="" data-id="f554f0274abb5b67a12a8c59865c0faf">
+        <h2>3 options</h2>
+<div>
+        <br>
+    </div>
+<div>
+    <br>
+</div>
+<div>JRebel</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>jHipster Reloader</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>Spring Loaded</div>
+<div class="absolute-element" style="position: absolute; width: 326px; height: 204px; z-index: 4; left: 11px; top: 96px;">
+<img src="http://recyclejunkcarsforcash.com/wp-content/uploads/et_temp/cash-in-hand1-694178_510x295.png" style="width: 286.720619866484px; height: 165.869198505386px; max-height: none; max-width: none;">
+<br>
+</div>
+<img src="http://www.peanutfreeplanet.com/v/vspfiles/templates/peanutfreeplanet/images/penut-no.png" style="width: 252px; height: 235px; max-height: none; max-width: none; position: absolute; z-index: 4; left: 608px; top: 408px;" class="absolute-element">
+</section>
+<section class="" data-id="10d6497d2170fa602dce373c2a33e058">
+    <h2>jHipster reloader</h2>
+<div>
+    <font style="font-size: 24px;">
+        <b>-javaagent:/home/user/.m2/repository/io/github/jhipster/loaded/agent/0.12/agent-0.12.jar</b>
+</font>
+</div>
+<div>
+<font style="font-size: 24px;">
+    <b>
+    <br>
+</b>
+</font>
+</div>
+<div>
+<pre><code>
+&lt;profiles&gt;
+  &lt;profile&gt;
+    &lt;id&gt;reloaded&lt;/id&gt;
+      &lt;dependencies&gt;
+        &lt;dependency&gt;
+          &lt;groupId&gt;io.github.jhipster.loaded&lt;/groupId&gt;
+          &lt;artifactId&gt;agent&lt;/artifactId&gt;
+          &lt;version&gt;0.12&lt;/version&gt;
+          &lt;exclusions&gt;
+            &lt;exclusion&gt;
+              &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+              &lt;artifactId&gt;springloaded&lt;/artifactId&gt;
+            &lt;/exclusion&gt;
+          &lt;/exclusions&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+          &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+          &lt;artifactId&gt;springloaded&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+      &lt;/dependencies&gt;
+  &lt;/profile&gt;
+&lt;/profiles&gt;
+</code></pre>
+</div>
+
+
+<br>
+
+
+</section>
+</section>
+<section class="stack" data-id="942d7c10909ab54603be148ce95bab57">
+    <section class="" data-id="f0f58cf86bac32121c7355b82955fc4b">
+        <h2>Interesting dependencies</h2>
+<div>
+        <br>
+    </div>
+<div>benefit of Spring Boot</div>
+<div>
+    <br>
+</div>
+<div>
+<ul>
+<li>MVC</li>
+<li>data access</li>
+<li>templating</li>
+<li>security</li>
+<li>...</li>
+</ul>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>... anything from the Spring stack</div>
+<br>
+</section>
+<section class="" data-id="37d6ee335057a68cdec70002a00a9264">
+    <h2>REST</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>@RestController</div>
+<div>
+<br>
+</div>
+<div>based on Spring MVC</div>
+</section>
+<section class="" data-id="05c55cdd0cdd35aa9f7e360d25d9127c">
+    <h2>TEMPLATING</h2>
+<div>
+    <br>
+</div>
+<div>
+<pre><code>&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+<br>
+<div>using Thymeleaf</div>
+</section>
+<section class="" data-id="55b740d995c0b9c22b01b639569ae451">
+    <h2>Spring Security</h2>
+<div>
+<pre><code>&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+<div>
+<font style="font-size: 24px;">@EnableWebMvcSecurity<br>
+</font>
+</div>
+<div>
+<font style="font-size: 24px;">
+    <font>@EnableGlobalMethodSecurity</font>
+</font>
+</div>
+<div>
+<pre><code>http.authorizeRequests().antMatchers("/identity/login", "/page/**", "/client/**", "/user/**").permitAll().anyRequest().authenticated();
+		
+http.csrf().disable();
+		
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+http.addFilterBefore(new AuthenticationTokenFilter(identityService), AnonymousAuthenticationFilter.class);
+http.exceptionHandling().authenticationEntryPoint(new UnauthorizedEntryPoint());</code></pre>
+</div>
+<div>
+<br>
+</div>
+</section>
+<section class="" data-id="73cf696c453d7b013ef1a0de8c46333c">
+    <h2>MIGRATIONS</h2>
+<div>
+    <br>
+</div>
+<div>
+<pre><code>&lt;dependency&gt;
+			&lt;groupId&gt;org.flywaydb&lt;/groupId&gt;
+			&lt;artifactId&gt;flyway-core&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+<br>
+<div>migration files</div>
+<div>
+<br>
+</div>
+<div>V1.1__init.sql</div>
+<div>V1.2__data.sql</div>
+<div>...</div>
+</section>
+<section class="" data-id="12a03dc4c2678eb1fca2f12944164b97">
+    <h2>DATA ACCESS</h2>
+<div>
+    <br>
+</div>
+<div>
+<pre><code>&lt;dependency&gt;
+	&lt;groupId&gt;com.h2database&lt;/groupId&gt;
+	&lt;artifactId&gt;h2&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+<div style="text-align: left;">
+    <br>
+</div>
+<div style="text-align: left;">
+<pre><code>&lt;dependency&gt; 
+   	&lt;groupId&gt;org.postgresql&lt;/groupId&gt;
+	&lt;artifactId&gt;postgresql&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+
+<br>
+<div>autodetection of the driver</div>
+</section>
+<section class="" data-id="221bd6cd4b82a2a60bcc5d399bf680cd">
+    <h2>DATA ACCESS II.</h2>
+<div>
+    <br>
+</div>
+<div>
+<pre><code>spring.datasource.url: jdbc:postgresql://localhost/mydb
+spring.datasource.username: myuser
+spring.datasource.password: mypass
+spring.datasource.driverClassName: org.postgresql.Driver</code></pre>
+</div>
+<br>
+<div>
+<pre><code>&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="29fda26d3fe84db7409f4d4ae2e0b8bb">
+    <h2>CONFIGURATION</h2>
+<div>
+    <br>
+</div>
+<div>driven mainly by:</div>
+<div>
+<br>
+</div>
+<div>
+<b>Spring Java Configuration</b>
+</div>
+<div>
+<b>
+<br>
+</b>
+</div>
+<div>
+<b>Spring Annotations</b>
+</div>
+<div>
+<b>
+<br>
+</b>
+</div>
+<div>
+<b>Spring Profiles</b>
+</div>
+<div>
+<b>
+<br>
+</b>
+</div>
+<div>
+<b>simple YAML / properties file</b>
+</div>
+</section>
+<section class="" data-id="c532d8ef8f4849bf0c28225d8cd1731a">
+    <h2>Cherry</h2>
+<div>
+    <br>
+</div>
+<div>
+<pre><code>@Component
+@ConfigurationProperties(prefix="connection")
+public class ConnectionSettings {
+
+    private String username;
+
+    private InetAddress remoteAddress;
+
+    // ... getters and setters
+
+}</code></pre>
+</div>
+<pre><code># application.yml
+
+connection:
+    username: admin
+    remoteAddress: 192.168.1.1</code></pre>
+<br>
+</section>
+</section>
+<section class="" data-id="3529e5df3dda242b9c1d4af7f29d6aef" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/776296/slide_container_4.png" data-background-size="contain">
+    <h2>Kontanjere &nbsp; &nbsp; &nbsp;&nbsp;</font></h2>
+</section>
+<section class="stack" data-id="37a34544942df38786136ad6949397cb">
+    <section class="" data-id="e68369f0a78e0f8709c04d85cdb0ed23" data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/776305/rock_png_by_camelfobia-d5k5kea.png">
+        <h2>
+            <font color="#980000">SKALA</font>
+        </h2>
+    </section>
+    <section class="" data-id="712cc0d7e8aa0d0e54a9cc441897f9f8">
+<h2>giter8 template</h2>
+<div>
+    <br>
+</div>
+<div>
+    <br>
+</div>
+<div>
+    <a href="https://github.com/lgazo/scala-boot.g8">https://github.com/lgazo/scala-boot.g8</a>
+    <br>
+</div>
+<div>
+    <br>
+</div>
+<div>
+<pre><code>curl https://raw.githubusercontent.com/n8han/conscript/master/setup.sh | sh</code><code># add to your path ~/bin
+cs n8han/giter8
+
+g8 lgazo/scala-boot</code>    </pre>
+</div>
+<div style="text-align: left;">
+    <br>
+</div>
+</section>
+</section>
+<section class="stack" data-id="f19115e69400420b43bd0a9bc24773e5">
+    <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/260424/threesquareschef-com_3_.jpg" data-background-size="cover" data-id="615141d2d1bd14d9683620aba2ad291a" class="">
+        <h2>
+            <br>
+        </h2>
+<div>
+        <br>
+    </div>
+<h2>Questions?</h2>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<b>@ladislavGazo</b>
+</div>
+<div>
+<b>gazo@seges.sk</b>
+</div>
+</section>
+<section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/lgazo/images/260426/sexy-cook-chef-costume-960-p.jpg" data-background-size="cover" class="" data-id="41f6918781adf7ee59c85133c3557ddc">
+    <h2>
+        <br>
+    </h2>
+<h2>
+    <br>
+</h2>
+<h2>Thank YOu... for...</h2>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<h1 style="font-style: normal; font-variant: normal;">ATTENTION</h1>
+</div>
+</section>
+</section>
+</div>
+
+
+<!-- END -->
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
